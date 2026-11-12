@@ -33,7 +33,7 @@ function parseName(file) {
 export const filesProvider = {
   id: 'files',
   name: 'Your audio files',
-  attribution: 'Your own clips. Private play only.',
+  attribution: '',
   attributionUrl: null,
   previewSeconds: 30,
   mergeBundledCatalogue: true, // small pools get the bundled catalogue as autocomplete distractors

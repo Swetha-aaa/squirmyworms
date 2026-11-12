@@ -249,7 +249,7 @@ export function renderResults({ engine, round, result, session, onPlayAgain, onC
           (result.prevLast != null ? ` · last game ${result.prevLast} pts` : '')),
       ),
 
-      isRemote() ? h('p', { class: 'muted small' }, dataSource().config.attribution) : null,
+      isRemote() && dataSource().config.attribution ? h('p', { class: 'muted small' }, dataSource().config.attribution) : null,
 
       h('div', { class: 'result-actions' },
         h('button', { class: 'btn btn-primary btn-lg btn-skew', type: 'button', onClick: onPlayAgain },

@@ -97,6 +97,7 @@ export function renderPlay({ engine, round, songs, session, autoplay, onSubmit, 
     cfg.attribution,
     cfg.attributionUrl ? [' ', h('a', { href: cfg.attributionUrl, target: '_blank', rel: 'noopener' }, cfg.providerName)] : null,
   );
+  notice.hidden = !cfg.attribution;
 
   // --- Slots
   const slotList = h('div', { class: 'slots' });

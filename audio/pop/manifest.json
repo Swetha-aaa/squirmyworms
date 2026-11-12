@@ -70,5 +70,20 @@
   },
   "Lil Nas X ft. Billy Ray Cyrus - Old Town Road.mp3": {
     "gainDb": 1
+  },
+  "Lady Gaga ft. Beyonce - Telephone.mp3": {
+    "artist": "Lady Gaga ft. Beyoncé"
+  },
+  "Maneskin - Beggin'.mp3": {
+    "artist": "Måneskin"
+  },
+  "Maneskin - I Wanna Be Your Slave.mp3": {
+    "artist": "Måneskin"
+  },
+  "ROSE & Bruno Mars - APT..mp3": {
+    "artist": "ROSÉ & Bruno Mars"
+  },
+  "Shawn Mendes & Camila Cabello - Senorita.mp3": {
+    "title": "Señorita"
   }
 }

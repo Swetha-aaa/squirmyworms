@@ -5,7 +5,6 @@ import { doodleStar, doodleArrow, tape, note, sketchIcon, connector } from '../c
 import { createCassette } from '../components/cassette.js';
 import { createWorm, createMascot, createStandingWorm } from '../components/worms.js';
 import { createBoombox } from '../components/boombox.js';
-import { dataSource } from '../data/index.js';
 import { createLights } from '../components/lights.js';
 
 export function renderHome({ engine, category, onPlay, onPickCategory, onAllMixes, onDuel }) {
@@ -105,9 +104,6 @@ export function renderHome({ engine, category, onPlay, onPickCategory, onAllMixe
       ),
     ),
 
-    h('footer', { class: 'foot' },
-      h('span', {}, dataSource().config.attribution),
-    ),
   );
 
   function hype() {
