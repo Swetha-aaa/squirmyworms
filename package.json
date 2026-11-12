@@ -1,0 +1,14 @@
+{
+  "name": "squirmyworms",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server/run.js",
+    "start:files": "node server/run.js files",
+    "start:deezer": "node server/run.js deezer",
+    "dev:fake-deezer": "node tools/fake-deezer.js",
+    "start:fake": "MIXTAPE_PROVIDER=deezer DEEZER_API_BASE=http://127.0.0.1:8790 node server/index.js"
+  }
+}
