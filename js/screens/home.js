@@ -8,6 +8,15 @@ import { createBoombox } from '../components/boombox.js';
 import { createLights } from '../components/lights.js';
 
 export function renderHome({ engine, category, onPlay, onPickCategory, onAllMixes, onDuel }) {
+  // Picking a mix swaps the tiles in place (no re-render), so the page stays where it is.
+  let current = category;
+  const tiles = h('div', { class: 'tiles tiles-duo' });
+  const drawTiles = () => tiles.replaceChildren(...CATEGORIES.map((c, i) => categoryTile(c, c.id === current.id, () => {
+    if (c.id === current.id) return;
+    current = c; onPickCategory(c); drawTiles();
+    tiles.querySelector('.is-selected')?.focus({ preventScroll: true });
+  }, i)));
+  drawTiles();
   const steps = [
     ['Listen', 'Four songs, all at once.', '#45D9FF', { mood: 'sing', acc: ['headphones', 'notes'], noteColor: '#FF4FA3' }],
     ['Search', 'Type a title or an artist.', '#6BE38A', { mood: 'happy', acc: ['magnifier'] }],
@@ -81,9 +90,7 @@ export function renderHome({ engine, category, onPlay, onPickCategory, onAllMixe
       h('div', { class: 'section-head' },
         h('h2', {}, 'Choose your mix'),
       ),
-      h('div', { class: 'tiles tiles-duo' },
-        CATEGORIES.map((c, i) => categoryTile(c, c.id === category.id, () => onPickCategory(c), i)),
-      ),
+      tiles,
     ),
 
     h('section', { class: 'howto' },

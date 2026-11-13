@@ -2086,3 +2086,18 @@ html, body { overflow-x: clip; }
 .duel-room-mix { margin: 0 0 14px; font-family: 'Fredoka', var(--font-ui); font-weight: 700; font-size: 18px; color: #FF4FA3; text-shadow: 0 0 12px rgba(255,79,163,.55); }
 .duel-room-mix-kpop { color: #A98BFF; text-shadow: 0 0 12px rgba(138,92,255,.6); }
 @media (prefers-reduced-motion: reduce) { .duel-mix { transition: none; } .duel-mix:hover { transform: none; } }
+
+/* Chosen mix: neon, unmistakable. The other one steps back. */
+.mix-card:not(.is-selected) { filter: saturate(.7) brightness(.82); transition: filter .2s, transform .2s, border-color .2s, box-shadow .2s; }
+.mix-card:not(.is-selected):hover { filter: none; }
+.mix-card.is-selected { border-color: var(--mc); border-width: 3px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mc) 55%, transparent), 0 0 22px var(--mc), 0 0 60px color-mix(in srgb, var(--mc) 50%, transparent), inset 0 0 28px color-mix(in srgb, var(--mc) 22%, transparent);
+  animation: mix-neon 2.6s ease-in-out infinite; }
+@keyframes mix-neon {
+  50% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--mc) 75%, transparent), 0 0 30px var(--mc), 0 0 80px color-mix(in srgb, var(--mc) 65%, transparent), inset 0 0 34px color-mix(in srgb, var(--mc) 30%, transparent); }
+}
+.theme-pop .mix-status, .theme-kpop .mix-status { background: transparent; color: #E9E2F2; border: 1.5px solid color-mix(in srgb, var(--mc) 55%, transparent); box-shadow: none; text-shadow: none; }
+.mix-card.is-selected .mix-status { background: var(--mc); color: #160C1F; border-color: var(--mc);
+  box-shadow: 0 0 14px var(--mc), 0 0 30px color-mix(in srgb, var(--mc) 55%, transparent); }
+.mix-card.is-selected .mix-status::before { content: '✓ '; }
+@media (prefers-reduced-motion: reduce) { .mix-card.is-selected { animation: none; } }

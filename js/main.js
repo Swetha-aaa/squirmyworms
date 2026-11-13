@@ -213,7 +213,7 @@ function route() {
         engine,
         category: session.category,
         onPlay: () => { engine.ensureContext(); startRound(); },
-        onPickCategory: (cat) => { setCategory(cat); route(); },
+        onPickCategory: (cat) => setCategory(cat), // home updates its tiles in place, so the page doesn't jump
         onAllMixes: () => go('mixes'),
         onDuel: () => { engine.ensureContext(); go('duel'); },
       }));
