@@ -7,10 +7,11 @@
 // available in categories.js. In remote mode, add seeds in server/categories.js.
 
 import { POP_SONGS } from './songs.pop.js';
+import { KPOP_SONGS } from './songs.kpop.js';
 import { fetchConfig, fetchCatalogue, fetchRound, fetchReplacements } from './remote.js';
 import { shuffle } from '../util/seed.js';
 
-const LOCAL_SONGS = { pop: POP_SONGS };
+const LOCAL_SONGS = { pop: POP_SONGS, kpop: KPOP_SONGS };
 
 const source = {
   mode: 'local',

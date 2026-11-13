@@ -115,6 +115,7 @@ function routeName() { return (location.hash || '#home').slice(1).split('/')[0];
 let duelRoundOnScreen = 0;
 onDuel((s) => {
   if (!s.players) return;
+  if (s.category && s.category !== session.category.id) setCategory(getCategory(s.category)); // the room decides the mix
   const at = routeName();
   const live = ['loading', 'countdown', 'playing'].includes(s.phase);
   if (live && (at !== 'duel-play' || s.match.round !== duelRoundOnScreen)) { duelRoundOnScreen = s.match.round; go('duel-play'); }
@@ -135,7 +136,12 @@ function route() {
       }
       engine.unload();
       loadCatalogue(session.category.id).catch(() => {});
-      mount(renderDuelLobby({ category: session.category, joinCode: (arg || '').toUpperCase(), onBack: () => go('home') }));
+      mount(renderDuelLobby({
+        category: session.category,
+        joinCode: (arg || '').toUpperCase(),
+        onPickCategory: (cat) => { setCategory(cat); loadCatalogue(cat.id).catch(() => {}); },
+        onBack: () => go('home'),
+      }));
       return;
     }
     case 'duel-play': {

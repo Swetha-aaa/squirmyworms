@@ -53,6 +53,8 @@ function newCode() {
 }
 const cleanName = (n) => String(n || '').replace(/[^\p{L}\p{N} ._'-]/gu, '').trim().slice(0, 16) || 'Mystery worm';
 
+const cleanCategory = (c) => (['pop', 'kpop'].includes(c) ? c : 'pop');
+
 function makeRoom({ isPublic, category }) {
   const room = {
     code: newCode(), isPublic, category,
@@ -89,7 +91,7 @@ function snapshot(room, you) {
   const r = room.round;
   const reveal = room.phase === 'done' || room.phase === 'between';
   return {
-    code: room.code, isPublic: room.isPublic, phase: room.phase, you, serverNow: now(),
+    code: room.code, isPublic: room.isPublic, category: room.category, phase: room.phase, you, serverNow: now(),
     match: { round: room.match.round, of: ROUNDS, results: room.match.results, betweenUntil: room.match.betweenUntil },
     players: room.players.map((p) => ({ name: p.name, score: p.score, wins: p.wins, roundWins: p.roundWins, total: p.total, ready: p.ready, rematch: p.rematch, color: p.color, connected: p.connected, wrong: p.wrong, giveUp: !!p.giveUp, declined: !!p.declined, left: !!p.left })),
     round: r && {
@@ -309,14 +311,14 @@ export function createDuelHandler({ provider, root, port, log, sendJson }) {
     const body = await readJson(req);
 
     if (route === 'create') {
-      const room = makeRoom({ isPublic: false, category: body.category || 'pop' });
+      const room = makeRoom({ isPublic: false, category: cleanCategory(body.category) });
       const p = addPlayer(room, body.name);
       log(`duel ${room.code} created`);
       return sendJson(res, 200, { code: room.code, token: p.token });
     }
 
     if (route === 'quick') {
-      const category = body.category || 'pop';
+      const category = cleanCategory(body.category);
       while (quickQueue.length) {
         const room = rooms.get(quickQueue[0]);
         if (room && room.players.length === 1 && room.players[0].connected && room.category === category) {

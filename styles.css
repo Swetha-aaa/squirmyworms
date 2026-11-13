@@ -2068,3 +2068,21 @@ html, body { overflow-x: clip; }
 .slot.is-taken .slot-taker { background: #9E2A4B; color: #FFE3EA; box-shadow: 0 0 10px rgba(158,42,75,.5); }
 .track-who.is-nobody { --pc: #4A3A5C; background: #2A2036; color: #B9AEC9; box-shadow: none; border: 1.5px solid #4A3A5C; }
 .track-who.is-nobody { --pc: #FF3B5C; background: #FF3B5C; color: #2A0610; border: 0; box-shadow: 0 0 12px rgba(255,59,92,.5); }
+
+/* Duel: pick a mix */
+.duel-mixes { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
+.duel-mixes[hidden] { display: none !important; }
+.duel-mixes-label { font-family: 'Fredoka', var(--font-ui); font-weight: 600; color: var(--muted); margin-right: 4px; }
+.duel-mix { --mc: #FF4FA3; position: relative; min-width: 132px; padding: 12px 26px; border-radius: 999px; cursor: pointer;
+  background: #150E1E; color: #CFC3DC; border: 2px solid color-mix(in srgb, var(--mc) 35%, #2A1F38);
+  font-family: 'Fredoka', var(--font-ui); font-weight: 700; font-size: 20px; letter-spacing: .01em;
+  transition: transform .15s, border-color .15s, box-shadow .2s, color .15s, background .15s; }
+.duel-mix-kpop { --mc: #8A5CFF; }
+.duel-mix:hover { transform: translateY(-2px); border-color: var(--mc); color: #fff; }
+.duel-mix:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.duel-mix.is-on { color: #fff; border-color: var(--mc); background: color-mix(in srgb, var(--mc) 22%, #150E1E);
+  box-shadow: 0 0 0 1px var(--mc), 0 0 18px color-mix(in srgb, var(--mc) 60%, transparent), inset 0 0 14px color-mix(in srgb, var(--mc) 30%, transparent);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--mc) 80%, transparent); }
+.duel-room-mix { margin: 0 0 14px; font-family: 'Fredoka', var(--font-ui); font-weight: 700; font-size: 18px; color: #FF4FA3; text-shadow: 0 0 12px rgba(255,79,163,.55); }
+.duel-room-mix-kpop { color: #A98BFF; text-shadow: 0 0 12px rgba(138,92,255,.6); }
+@media (prefers-reduced-motion: reduce) { .duel-mix { transition: none; } .duel-mix:hover { transform: none; } }

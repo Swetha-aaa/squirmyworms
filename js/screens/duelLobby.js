@@ -1,5 +1,6 @@
 import { h, icon } from '../ui/dom.js';
 import { wordmark } from './shared.js';
+import { CATEGORIES, getCategory } from '../data/categories.js';
 import { createStandingWorm } from '../components/worms.js';
 import {
   getName, setName, createRoom, joinRoom, quickMatch, toggleReady, leave, onDuel, inviteLink, duelConn,
@@ -10,7 +11,8 @@ import {
  * code, random opponent). In a room: the code, a link to copy, both players and
  * a ready button. The router moves to the play screen once the round loads.
  */
-export function renderDuelLobby({ category, joinCode = '', onBack }) {
+export function renderDuelLobby({ category, joinCode = '', onPickCategory = () => {}, onBack }) {
+  let mix = category;
   const nameInput = h('input', { class: 'duel-name-input', type: 'text', maxlength: '16', value: getName(), 'aria-label': 'Your name', spellcheck: 'false', autocomplete: 'off' });
   nameInput.addEventListener('change', () => setName(nameInput.value.trim()));
   const name = () => { const n = nameInput.value.trim() || getName(); setName(n); return n; };
@@ -28,7 +30,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
   }
 
   const options = h('div', { class: 'duel-options' },
-    h('button', { class: 'duel-opt duel-opt-create', type: 'button', onClick: () => attempt(() => createRoom(name(), category.id)) },
+    h('button', { class: 'duel-opt duel-opt-create', type: 'button', onClick: () => attempt(() => createRoom(name(), mix.id)) },
       h('span', { class: 'duel-opt-dots', 'aria-hidden': 'true' }),
       createStandingWorm({ color: '#FF4FA3', mood: 'excited', acc: ['arms', 'sparkles'], className: 'duel-opt-worm' }),
       h('span', { class: 'duel-opt-icon' }, icon('share')),
@@ -42,7 +44,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
       h('span', { class: 'duel-opt-title' }, 'Join with a code'),
       h('span', { class: 'duel-join-row' }, codeInput, h('button', { class: 'btn btn-primary', type: 'submit' }, 'Join')),
     ),
-    h('button', { class: 'duel-opt duel-opt-quick', type: 'button', onClick: () => attempt(() => quickMatch(name(), category.id)) },
+    h('button', { class: 'duel-opt duel-opt-quick', type: 'button', onClick: () => attempt(() => quickMatch(name(), mix.id)) },
       h('span', { class: 'duel-opt-dots', 'aria-hidden': 'true' }),
       createStandingWorm({ color: '#45D9FF', mood: 'star', acc: ['headphones', 'sparkles'], className: 'duel-opt-worm' }),
       h('span', { class: 'duel-opt-icon' }, icon('shuffle')),
@@ -50,6 +52,20 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
       h('span', { class: 'duel-opt-sub' }, 'Match with whoever is online'),
     ),
   );
+
+  // Step one: which mix to duel on. Joining with a code uses the room's mix.
+  const mixButtons = CATEGORIES.filter((c) => c.available).map((c) =>
+    h('button', {
+      class: `duel-mix duel-mix-${c.id}` + (c.id === mix.id ? ' is-on' : ''), type: 'button', 'aria-pressed': String(c.id === mix.id),
+      onClick: () => {
+        mix = c; onPickCategory(c); mixChip.textContent = c.short;
+        for (const b of mixButtons) { const on = b.dataset.mix === c.id; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); }
+      },
+      'data-mix': c.id,
+    }, h('span', { class: 'duel-mix-name' }, c.name)));
+  const mixPicker = h('div', { class: 'duel-mixes', role: 'group', 'aria-label': 'Pick a mix' },
+    h('span', { class: 'duel-mixes-label' }, 'Pick a mix'), ...mixButtons);
+  const mixChip = h('span', { class: 'chip' }, mix.short);
 
   const intro = h('section', { class: 'duel-intro' },
     h('div', { class: 'duel-faceoff', 'aria-hidden': 'true' },
@@ -60,6 +76,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
     h('h1', { class: 'duel-title' }, 'Duel'),
     h('p', { class: 'duel-lede' }, 'One mix, same moment. First to name a song steals it. Most songs wins.'),
     h('label', { class: 'duel-name' }, h('span', {}, 'Your name'), nameInput),
+    mixPicker,
     options,
     errorEl,
   );
@@ -71,7 +88,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
     h('header', { class: 'topbar' },
       h('button', { class: 'btn btn-ghost btn-icon', type: 'button', 'aria-label': 'Back to home', onClick: async () => { await leave(); onBack(); } }, icon('back')),
       wordmark('sm'),
-      h('div', { class: 'topbar-meta' }, h('span', { class: 'chip' }, category.short)),
+      h('div', { class: 'topbar-meta' }, mixChip),
     ),
     intro,
     room,
@@ -81,6 +98,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
   async function renderRoom(s) {
     intro.hidden = true;
     room.hidden = false;
+    if (s.category) mixChip.textContent = getCategory(s.category).short;
     const me = s.players[s.you];
     const them = s.players[1 - s.you];
     if (!linkInfo || linkInfo.code !== s.code) linkInfo = { code: s.code, ...(await inviteLink(s.code)) };
@@ -123,6 +141,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
             !s.isPublic && linkInfo.lanOnly
               ? h('p', { class: 'duel-hint' }, 'This link works for friends on the same Wi-Fi as you. For friends anywhere, the game needs to be put online first.')
               : null),
+      s.category ? h('p', { class: `duel-room-mix duel-room-mix-${s.category}` }, `${getCategory(s.category).name} mix`) : null,
       h('div', { class: 'duel-players' }, playerCard(me, s.you), h('span', { class: 'duel-vs duel-vs-sm' }, 'vs'), playerCard(them, 1 - s.you)),
       s.phase === 'waiting' ? readyBtn : h('p', { class: 'duel-loading' }, h('span', { class: 'spinner', 'aria-hidden': 'true' }), 'Loading the mix…'),
       s.result?.error ? h('p', { class: 'duel-error' }, s.result.error) : null,
@@ -138,6 +157,7 @@ export function renderDuelLobby({ category, joinCode = '', onBack }) {
   // Arriving from a shared link: code is filled in, they just pick a name and join.
   if (joinCode && !duelConn()) {
     el.classList.add('is-invited');
+    mixPicker.hidden = true;
     intro.insertBefore(h('p', { class: 'duel-invite' }, `You've been invited to room ${joinCode}. Pick a name and tap Join.`), intro.querySelector('.duel-name'));
     setTimeout(() => nameInput.select(), 50);
   }

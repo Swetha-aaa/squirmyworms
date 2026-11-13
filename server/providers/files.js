@@ -14,14 +14,16 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { POP_SONGS } from '../../js/data/songs.pop.js';
+import { KPOP_SONGS } from '../../js/data/songs.kpop.js';
 import { normalise } from '../catalog.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const AUDIO_DIR = path.join(ROOT, 'audio');
 const EXT = new Set(['.mp3', '.m4a', '.ogg', '.wav', '.flac', '.aac']);
 
+const bundledKey = (title, artist) => `${normalise(title)}|${normalise(artist.split(/ ft\.| & |, /)[0])}`;
 const bundledByKey = new Map();
-for (const s of POP_SONGS) bundledByKey.set(`${normalise(s.title)}|${normalise(s.artist.split(/ ft\.| & |, /)[0])}`, s);
+for (const [cat, list] of [['pop', POP_SONGS], ['kpop', KPOP_SONGS]]) for (const s of list) bundledByKey.set(`${cat}|${bundledKey(s.title, s.artist)}`, s);
 
 function parseName(file) {
   const base = file.replace(/\.[^.]+$/, '');
@@ -56,7 +58,7 @@ export const filesProvider = {
       const override = manifest[file] || {};
       const title = override.title || parsed.title;
       const artist = override.artist || parsed.artist;
-      const bundled = bundledByKey.get(`${normalise(title)}|${normalise(artist.split(/ ft\.| & |, /)[0])}`);
+      const bundled = bundledByKey.get(`${categoryId}|${bundledKey(title, artist)}`);
       const id = `files:${categoryId}:${file}`;
       out.push({
         id,

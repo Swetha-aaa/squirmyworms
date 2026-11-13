@@ -17,7 +17,7 @@ export const CATEGORIES = [
     name: 'K-pop',
     short: 'K-POP',
     blurb: 'Idols, comebacks and hooks you can\'t shake.',
-    available: false,
+    available: true,
     accent: '#8A5CFF',
   },
 ];

@@ -4,8 +4,9 @@
 
 import { getSeeds } from './categories.js';
 import { POP_SONGS } from '../js/data/songs.pop.js';
+import { KPOP_SONGS } from '../js/data/songs.kpop.js';
 
-const BUNDLED = { pop: POP_SONGS };
+const BUNDLED = { pop: POP_SONGS, kpop: KPOP_SONGS };
 
 const POOL_TTL_MS = 6 * 60 * 60 * 1000;
 const pools = new Map(); // categoryId -> { builtAt, tracks, building }
