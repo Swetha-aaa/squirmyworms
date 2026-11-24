@@ -29,7 +29,7 @@ const PORT = Number(process.env.PORT || 8787);
 const provider = getProvider();
 const log = (...a) => console.log(new Date().toISOString(), ...a);
 
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.md': 'text/markdown', '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.flac': 'audio/flac', '.aac': 'audio/aac' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.md': 'text/markdown', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.flac': 'audio/flac', '.aac': 'audio/aac' };
 
 function sendJson(res, status, obj) {
   const body = JSON.stringify(obj);
@@ -96,6 +96,7 @@ async function handleApi(req, res, url) {
 function serveStatic(req, res, url) {
   let p = decodeURIComponent(url.pathname);
   if (p === '/') p = '/index.html';
+  if (!path.extname(p)) p = p.replace(/\/$/, '') + '.html'; // clean URLs: /privacy -> privacy.html
   const file = path.join(ROOT, p);
   if (!file.startsWith(ROOT) || file.includes(`${path.sep}server${path.sep}`) || file.includes(`${path.sep}tools${path.sep}`)) {
     res.writeHead(403); return res.end();

@@ -2101,3 +2101,15 @@ html, body { overflow-x: clip; }
   box-shadow: 0 0 14px var(--mc), 0 0 30px color-mix(in srgb, var(--mc) 55%, transparent); }
 .mix-card.is-selected .mix-status::before { content: '✓ '; }
 @media (prefers-reduced-motion: reduce) { .mix-card.is-selected { animation: none; } }
+
+/* Site footer: links to the info pages, on every screen */
+.site-foot { max-width: var(--col-wide); margin: 40px auto 0; border-top: 1px solid var(--line); padding: 22px 24px 28px; text-align: center; color: var(--muted); font-size: 14px; }
+.site-foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; margin-bottom: 8px; }
+.site-foot a { color: #CFC3DC; text-decoration: none; font-family: 'Fredoka', var(--font-ui); font-weight: 600; font-size: 15px; }
+.site-foot a:hover { color: var(--pink); }
+.site-foot a:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; border-radius: 4px; }
+.site-foot p { margin: 0; }
+
+.howto .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.section-link { font-family: 'Fredoka', var(--font-ui); font-weight: 600; font-size: 16px; color: #5EE6C8; text-decoration: underline; text-underline-offset: 4px; }
+.section-link:hover { color: #fff; }

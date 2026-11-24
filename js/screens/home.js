@@ -96,6 +96,7 @@ export function renderHome({ engine, category, onPlay, onPickCategory, onAllMixe
     h('section', { class: 'howto' },
       h('div', { class: 'section-head' },
         h('h2', {}, 'How to play'),
+        h('a', { class: 'section-link', href: '/how-to-play' }, 'Full rules and scoring'),
       ),
       h('ol', { class: 'steps steps-worms' },
         steps.map(([title, body, color, look], i) =>
